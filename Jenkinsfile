@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Checkout') {
             steps {
-                echo 'Hello World'
-		echo 'Bye bye cruel world'
+		git branch: 'main', changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
+		ls -la
             }
         }
     }
