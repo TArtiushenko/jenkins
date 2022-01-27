@@ -3,7 +3,7 @@ pipeline {
   triggers {
     GenericTrigger(
      genericVariables: [
-      [key: 'ref', value: '$.ref']
+      [key: 'ref', value: '$.ref', regexpFilter: 'refs/heads/']
      ],
 
      causeString: 'Triggered on $ref',
@@ -17,7 +17,7 @@ pipeline {
      silentResponse: false,
 
      regexpFilterText: '$ref',
-     regexpFilterExpression: 'refs/heads/dev'
+     regexpFilterExpression: 'dev'
     )
   }
     stages {
