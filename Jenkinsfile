@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh "echo $branch"
+                sh "echo $ref"
 		        git branch: 'main', changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
 		        sh label: 'checkout', script: 'ls -la'
             }
