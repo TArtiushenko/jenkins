@@ -77,6 +77,7 @@ spec:
           }
           echo ${IMAGE_VERSION}
         }
+      }
     }
 }
 
