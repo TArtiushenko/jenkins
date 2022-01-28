@@ -16,6 +16,8 @@ spec:
     - mountPath: "/home/jenkins/agent"
       name: "workspace-volume"
       readOnly: false
+    - name: dockersock
+      mountPath: /var/run/docker.sock
     workingDir: "/home/jenkins/agent"
   - name: "jnlp"
     image: "jenkins/inbound-agent:4.3-4"
@@ -28,6 +30,10 @@ spec:
     - mountPath: "/home/jenkins/agent"
       name: "workspace-volume"
       readOnly: false
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
 '''
         defaultContainer 'docker' 
         }
