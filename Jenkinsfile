@@ -66,8 +66,13 @@ spec:
     stages {
       stage('Checkout') {
         steps {
-          git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
-
+          script {
+            if ("$ref" != '' && "$base_ref" == '') {
+              git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
+            } else {
+              git branch: "$base_ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
+            }
+          }
         }
       }
       stage('Create tag') {
@@ -75,6 +80,9 @@ spec:
           script {
             if ("$ref" == 'dev') {
                 IMAGE_VERSION = 'dev-' + sh(returnStdout: true, script: 'date +%s')
+            }
+            if ("$base_ref" == 'release') {
+                IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep rc-[0-9] || echo rc-0 ) | sort --version-sort -r | head -1 | awk -F 'rc-' '{ print "rc-" $2 +1}' ''')
             }
           }
         }
