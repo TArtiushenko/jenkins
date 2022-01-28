@@ -65,10 +65,15 @@ spec:
       stage('Checkout') {
         steps {
           git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
-          echo "${IMAGE_VERSION}"
-          script {
-            IMAGE_VERSION = "test"
-          }
+
+        }
+      }
+      stage('Create tag') {
+        steps {
+          sh(returnStdout: true, script: '''#!/bin/bash
+          if [$ref = 'dev']; then
+          IMAGE_VERSION=dev-$(date +%s)
+          ''')
         }
       }
       stage('Build') {
