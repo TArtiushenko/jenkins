@@ -29,6 +29,7 @@ spec:
       name: "workspace-volume"
       readOnly: false
 '''
+        defaultContainer 'docker' 
         }
     }
   triggers {
@@ -62,6 +63,7 @@ spec:
             // container('docker') {
                 steps {
                     sh label: 'test', script: 'docker -v'
+                    sh label: 'build', script: 'docker build . -t test:latest'
                 }
             // }
         }
