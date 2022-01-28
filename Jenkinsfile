@@ -59,11 +59,11 @@ spec:
             }
         }
         stage('Build') {
-            container('docker') {
+            // container('docker') {
                 steps {
                     sh label: 'test', script: 'docker -v'
                 }
-            }
+            // }
         }
     }
 }
