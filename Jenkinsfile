@@ -1,5 +1,6 @@
 pipeline {
-    agent kubernetes {
+    agent {
+        kubernetes {
             yaml '''
 apiVersion: v1
 kind: Pod
@@ -28,6 +29,7 @@ spec:
       name: "workspace-volume"
       readOnly: false
 '''
+        }
     }
   triggers {
     GenericTrigger(
