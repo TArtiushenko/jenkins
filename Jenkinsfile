@@ -70,20 +70,19 @@ spec:
       }
       stage('Create tag') {
         steps {
-          sh(returnStdout: true, script: '''#!/bin/bash
-          if [[ $ref == 'dev' ]]; then
-          IMAGE_VERSION=dev-$(date +%s)
-          fi
-          ''')
+          script {
+            if ("$ref" == 'dev') {
+                IMAGE_VERSION = 'dev-' + sh(returnStdout: true, script: 'date +%s')
+            }
+          }
         }
       }
       stage('Build') {
         steps {
           container('docker') {
             sh label: 'test', script: 'docker -v'
-            sh label: 'build', script: 'docker build . -t test:latest'
+            sh label: 'build', script: 'docker build . -t test:${IMAGE_VERSION}'
           }
-          echo "${IMAGE_VERSION}"
         }
       }
     }
