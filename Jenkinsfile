@@ -82,7 +82,7 @@ spec:
       stage('Build') {
         steps {
           container('docker') {
-            sh label: 'build', script: 'docker build . -t ${IMAGE_NAME}:${IMAGE_VERSION}'
+            sh label: 'build', script: 'docker build . -t ' + IMAGE_NAME + ':' + IMAGE_VERSION
           }
         }
       }
