@@ -65,7 +65,7 @@ spec:
       stage('Checkout') {
         steps {
           git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
-          echo ${IMAGE_VERSION}
+          echo "${IMAGE_VERSION}"
           sh 'IMAGE_VERSION=test'
         }
       }
@@ -75,7 +75,7 @@ spec:
             sh label: 'test', script: 'docker -v'
             sh label: 'build', script: 'docker build . -t test:latest'
           }
-          echo ${IMAGE_VERSION}
+          echo "${IMAGE_VERSION}"
         }
       }
     }
