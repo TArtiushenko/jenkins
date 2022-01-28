@@ -73,6 +73,7 @@ spec:
           sh(returnStdout: true, script: '''#!/bin/bash
           if [$ref = 'dev']; then
           IMAGE_VERSION=dev-$(date +%s)
+          fi
           ''')
         }
       }
