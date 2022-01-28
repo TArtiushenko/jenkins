@@ -42,6 +42,7 @@ spec:
     GenericTrigger(
      genericVariables: [
       [key: 'ref', value: '$.ref', regexpFilter: 'refs/heads/']
+      [key: 'base_ref', value: '$.base_ref', regexpFilter: 'refs/heads/']
      ],
 
      causeString: 'Triggered on $ref',
@@ -59,6 +60,7 @@ spec:
     )
   }
     environment {
+        IMAGE_NAME = 'test'
         IMAGE_VERSION = 'latest'
     }
     stages {
@@ -80,8 +82,7 @@ spec:
       stage('Build') {
         steps {
           container('docker') {
-            sh label: 'test', script: 'docker -v'
-            sh label: 'build', script: 'docker build . -t test:${IMAGE_VERSION}'
+            sh label: 'build', script: 'docker build . -t ${IMAGE_NAME}:${IMAGE_VERSION}'
           }
         }
       }
