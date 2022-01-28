@@ -58,19 +58,24 @@ spec:
     //  regexpFilterExpression: 'dev'
     )
   }
+    environment {
+        IMAGE_VERSION = 'latest'
+    }
     stages {
-        stage('Checkout') {
-          steps {
-		        git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
-		        sh label: 'checkout', script: 'ls -la'
-          }
+      stage('Checkout') {
+        steps {
+          git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
+          echo ${IMAGE_VERSION}
+          IMAGE_VERSION=test
         }
-        stage('Build') {
-          steps {
-            container('docker') {
-              sh label: 'test', script: 'docker -v'
-              sh label: 'build', script: 'docker build . -t test:latest'
+      }
+      stage('Build') {
+        steps {
+          container('docker') {
+            sh label: 'test', script: 'docker -v'
+            sh label: 'build', script: 'docker build . -t test:latest'
           }
+          echo ${IMAGE_VERSION}
         }
     }
 }
