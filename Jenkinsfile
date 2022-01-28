@@ -71,7 +71,7 @@ spec:
       stage('Create tag') {
         steps {
           sh(returnStdout: true, script: '''#!/bin/bash
-          if [$ref = 'dev']; then
+          if [[ $ref == 'dev' ]]; then
           IMAGE_VERSION=dev-$(date +%s)
           fi
           ''')
