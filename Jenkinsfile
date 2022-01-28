@@ -66,7 +66,9 @@ spec:
         steps {
           git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
           echo "${IMAGE_VERSION}"
-          sh 'IMAGE_VERSION=test'
+          script {
+            IMAGE_VERSION = "test"
+          }
         }
       }
       stage('Build') {
