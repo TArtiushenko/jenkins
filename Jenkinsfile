@@ -87,6 +87,10 @@ spec:
               case 'release':
                 IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep rc-[0-9] || echo rc-0 ) | sort --version-sort -r | head -1 | awk -F 'rc-' '{ print "rc-" $2 +1}' ''')
               break
+
+              case 'main':
+                IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep v[0-9]\.[0-9]\.[0-9] || echo v1.0.-1 ) | sort --version-sort -r | head -1 | awk -F. -v OFS=. '{$NF++;print}' ''')
+              break
             }
             // if ("$ref" == 'dev') {
             //     IMAGE_VERSION = 'dev-' + sh(returnStdout: true, script: 'date +%s')
