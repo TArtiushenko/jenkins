@@ -41,8 +41,8 @@ spec:
   triggers {
     GenericTrigger(
      genericVariables: [
-      [key: 'ref', value: '$.ref', regexpFilter: 'refs/heads/'],
-      [key: 'base_ref', value: '$.base_ref', regexpFilter: 'refs/heads/']
+      [key: 'ref', value: '$.ref', regexpFilter: 'refs/heads/', default: ''],
+      [key: 'base_ref', value: '$.base.ref', default: '']
      ],
 
      causeString: 'Triggered on $ref',
