@@ -1,5 +1,34 @@
 pipeline {
-    agent any
+    agent kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: docker
+    image: docker
+    command: 
+     - "sleep"
+    args:
+     - "999999"
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+    workingDir: "/home/jenkins/agent"
+  - name: "jnlp"
+    image: "jenkins/inbound-agent:4.3-4"
+    resources:
+      limits: {}
+      requests:
+        memory: "1042Mi"
+        cpu: "500m"
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+'''
+    }
   triggers {
     GenericTrigger(
      genericVariables: [
@@ -16,8 +45,8 @@ pipeline {
 
      silentResponse: false,
 
-     regexpFilterText: '$ref',
-     regexpFilterExpression: 'dev'
+    //  regexpFilterText: '$ref',
+    //  regexpFilterExpression: 'dev'
     )
   }
     stages {
@@ -28,8 +57,10 @@ pipeline {
             }
         }
         stage('Build') {
-            steps {
-                sh label: 'test', script: 'ls -la'
+            container('docker') {
+                steps {
+                    sh label: 'test', script: 'docker -v'
+                }
             }
         }
     }
