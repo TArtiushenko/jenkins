@@ -35,7 +35,7 @@ spec:
     hostPath:
       path: /var/run/docker.sock
 '''
-        defaultContainer 'docker' 
+        // defaultContainer 'docker' 
         }
     }
   triggers {
@@ -60,18 +60,17 @@ spec:
   }
     stages {
         stage('Checkout') {
-            steps {
+          steps {
 		        git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'		
 		        sh label: 'checkout', script: 'ls -la'
-            }
+          }
         }
         stage('Build') {
-            // container('docker') {
-                steps {
-                    sh label: 'test', script: 'docker -v'
-                    sh label: 'build', script: 'docker build . -t test:latest'
-                }
-            // }
+          steps {
+            container('docker') {
+              sh label: 'test', script: 'docker -v'
+              sh label: 'build', script: 'docker build . -t test:latest'
+          }
         }
     }
 }
