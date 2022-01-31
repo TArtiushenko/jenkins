@@ -112,7 +112,7 @@ spec:
         steps {
           container('docker') {
             withCredentials([file(credentialsId: 'gcr', variable: 'json_key')]) {
-                sh label: 'docker login', script: 'cat json_key | docker login -u _json_key --password-stdin eu.gcr.io'
+                sh label: 'docker login', script: 'cat $json_key | docker login -u _json_key --password-stdin eu.gcr.io'
             }
           }
         }
