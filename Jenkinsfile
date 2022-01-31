@@ -69,12 +69,14 @@ spec:
     stages {
       stage('Checkout') {
         steps {
-          withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
+          script {
             if (ref.contains('refs/tags/')) { 
               branch = ref.replace('refs/tags/', '')
             } else {
               branch = ref
             }
+          }
+          withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
             git branch: branch, changelog: false, url: 'https://' + access_token + '@github.com/TArtiushenko/test.git'
           }
         }
