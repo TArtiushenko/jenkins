@@ -64,6 +64,7 @@ spec:
         GCP_PROJECT = 'valid-volt-331607'
         IMAGE_NAME = 'test-jenkins'
         IMAGE_VERSION = 'latest'
+        SKIP = false
     }
     stages {
       stage('Checkout') {
@@ -99,6 +100,16 @@ spec:
                 IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep v[0-9]\\.[0-9]\\.[0-9] || echo v1.0.-1 ) | sort --version-sort -r | head -1 | awk -F. -v OFS=. '{$NF++;print}' ''')
               break
             }
+
+            if (ref.contains('refs/tags/')) {
+              tag = ref.replace('refs/tags/', '')
+              if (sh(returnStdout: true, script: 'git tag | grep ' + tag)) {
+                SKIP = true
+              } else {
+                IMAGE_VERSION = tag
+              }
+            }
+
             // if ("$ref" == 'dev') {
             //     IMAGE_VERSION = 'dev-' + sh(returnStdout: true, script: 'date +%s')
             // }
@@ -109,6 +120,11 @@ spec:
         }
       }
       stage('Build') {
+        when {
+          expression {
+            SKIP == false
+          }
+        }
         steps {
           container('docker') {
             sh label: 'build', script: 'docker build . -t ' + GCR_DOMAIN + '/' + GCP_PROJECT + '/' + IMAGE_NAME + ':' + IMAGE_VERSION
@@ -116,6 +132,11 @@ spec:
         }
       }
       stage('Publish') {
+        when {
+          expression {
+            SKIP == false
+          }
+        }
         steps {
           container('docker') {
             withCredentials([file(credentialsId: 'gcr', variable: 'json_key')]) {
