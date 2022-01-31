@@ -112,7 +112,7 @@ spec:
       stage('Build') {
         when {
           expression {
-            SKIP == false
+            SKIP.toBoolean() == false
           }
         }
         steps {
@@ -124,7 +124,7 @@ spec:
       stage('Publish') {
         when {
           expression {
-            SKIP == false
+            SKIP.toBoolean() == false
           }
         }
         steps {
