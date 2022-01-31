@@ -89,7 +89,7 @@ spec:
               break
 
               case 'main':
-                IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep v[0-9]\.[0-9]\.[0-9] || echo v1.0.-1 ) | sort --version-sort -r | head -1 | awk -F. -v OFS=. '{$NF++;print}' ''')
+                IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep v[0-9]\\.[0-9]\\.[0-9] || echo v1.0.-1 ) | sort --version-sort -r | head -1 | awk -F. -v OFS=. '{$NF++;print}' ''')
               break
             }
             // if ("$ref" == 'dev') {
