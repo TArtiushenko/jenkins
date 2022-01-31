@@ -60,7 +60,9 @@ spec:
     )
   }
     environment {
-        IMAGE_NAME = 'test'
+        GCR_DOMAIN = 'gcr.io'
+        GCP_PROJECT = 'valid-volt-331607'
+        IMAGE_NAME = 'test-jenkins'
         IMAGE_VERSION = 'latest'
     }
     stages {
@@ -104,7 +106,7 @@ spec:
       stage('Build') {
         steps {
           container('docker') {
-            sh label: 'build', script: 'docker build . -t ' + IMAGE_NAME + ':' + IMAGE_VERSION
+            sh label: 'build', script: 'docker build . -t ' + GCR_DOMAIN + '/' + GCP_PROJECT + '/' + IMAGE_NAME + ':' + IMAGE_VERSION
           }
         }
       }
@@ -112,8 +114,9 @@ spec:
         steps {
           container('docker') {
             withCredentials([file(credentialsId: 'gcr', variable: 'json_key')]) {
-                sh label: 'docker login', script: 'cat $json_key | docker login -u _json_key --password-stdin eu.gcr.io'
+                sh label: 'docker login', script: 'cat $json_key | docker login -u _json_key --password-stdin ' + GCR_DOMAIN
             }
+            sh label: 'docker push', script: 'docker push ' + GCR_DOMAIN + '/' + GCP_PROJECT + '/' + IMAGE_NAME + ':' + IMAGE_VERSION
           }
         }
       }
