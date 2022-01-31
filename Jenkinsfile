@@ -69,7 +69,7 @@ spec:
       stage('Checkout') {
         steps {
           withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
-            git branch: "$ref", changelog: false, url: 'https://$access_token@github.com/TArtiushenko/test.git'
+            git branch: "$ref", changelog: false, url: 'https://' + access_token + '@github.com/TArtiushenko/test.git'
             // sh label: 'git checkout', script: '''git clone --branch $ref https://$access_token@github.com/TArtiushenko/test.git .'''
           }
 
