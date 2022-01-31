@@ -110,8 +110,10 @@ spec:
       }
       stage('Publish') {
         steps {
-          withCredentials([file(credentialsId: 'gcr', variable: 'json_key')]) {
-              sh label: 'docker login', script: 'cat json_key | docker login -u _json_key --password-stdin eu.gcr.io'
+          container('docker') {
+            withCredentials([file(credentialsId: 'gcr', variable: 'json_key')]) {
+                sh label: 'docker login', script: 'cat json_key | docker login -u _json_key --password-stdin eu.gcr.io'
+            }
           }
         }
       }
