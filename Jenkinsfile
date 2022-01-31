@@ -71,13 +71,13 @@ spec:
         steps {
           script {
             if (ref.contains('refs/tags/')) { 
-              branch = ref.replace('refs/tags/', '')
+              tag = ref.replace('refs/tags/', '')
+              checkout([$class: 'GitSCM', branches: [[name: '*/tags/' + tag]], extensions: [], userRemoteConfigs: [[refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/TArtiushenko/test.git']]])
             } else {
-              branch = ref
+              withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
+                git branch: ref, changelog: false, url: 'https://' + access_token + '@github.com/TArtiushenko/test.git'
+              }
             }
-          }
-          withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
-            git branch: branch, changelog: false, url: 'https://' + access_token + '@github.com/TArtiushenko/test.git'
           }
         }
       }
