@@ -68,7 +68,11 @@ spec:
     stages {
       stage('Checkout') {
         steps {
-          git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
+          withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
+            sh label: 'git checkout', script: '''git clone --branch $ref https://$access_token@github.com/TArtiushenko/test.git .'''
+          }
+
+          // git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
           // script {
           //   if ("$ref" != '' && "$base_ref" == '') {
           //     git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
@@ -117,6 +121,18 @@ spec:
                 sh label: 'docker login', script: 'cat $json_key | docker login -u _json_key --password-stdin ' + GCR_DOMAIN
             }
             sh label: 'docker push', script: 'docker push ' + GCR_DOMAIN + '/' + GCP_PROJECT + '/' + IMAGE_NAME + ':' + IMAGE_VERSION
+          }
+        }
+      }
+
+      stage('Git tag') {
+        when {
+          expression {
+            "$ref" == 'main' || "$ref" == 'release'
+          }
+          steps {
+            sh label: 'git add tag', script: 'git tag ' + IMAGE_VERSION
+            sh label: 'git push tag', script: 'git push origin ' + IMAGE_VERSION
           }
         }
       }
