@@ -130,10 +130,10 @@ spec:
           expression {
             "$ref" == 'main' || "$ref" == 'release'
           }
-          steps {
-            sh label: 'git add tag', script: 'git tag ' + IMAGE_VERSION
-            sh label: 'git push tag', script: 'git push origin ' + IMAGE_VERSION
-          }
+        }
+        steps {
+          sh label: 'git add tag', script: 'git tag ' + IMAGE_VERSION
+          sh label: 'git push tag', script: 'git push origin ' + IMAGE_VERSION
         }
       }
 
