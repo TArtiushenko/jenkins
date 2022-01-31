@@ -70,20 +70,16 @@ spec:
       stage('Checkout') {
         steps {
           withCredentials([string(credentialsId: 'git_access_token', variable: 'access_token')]) {
-            git branch: "$ref", changelog: false, url: 'https://' + access_token + '@github.com/TArtiushenko/test.git'
-            // sh label: 'git checkout', script: '''git clone --branch $ref https://$access_token@github.com/TArtiushenko/test.git .'''
+            if (ref.contains('refs/tags/')) { 
+              branch = ref.replace('refs/tags/', '')
+            } else {
+              branch = ref
+            }
+            git branch: branch, changelog: false, url: 'https://' + access_token + '@github.com/TArtiushenko/test.git'
           }
-
-          // git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
-          // script {
-          //   if ("$ref" != '' && "$base_ref" == '') {
-          //     git branch: "$ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
-          //   } else {
-          //     git branch: "$base_ref", changelog: false, url: 'https://github.com/TArtiushenko/test.git'
-          //   }
-          // }
         }
       }
+
       stage('Create tag') {
         steps {
           script {
@@ -103,22 +99,14 @@ spec:
 
             if (ref.contains('refs/tags/')) {
               tag = ref.replace('refs/tags/', '')
-              if (sh(returnStdout: true, script: 'git tag | grep ' + tag)) {
-                SKIP = true
-              } else {
-                IMAGE_VERSION = tag
-              }
+              //TODO regex
+              IMAGE_VERSION = tag
             }
 
-            // if ("$ref" == 'dev') {
-            //     IMAGE_VERSION = 'dev-' + sh(returnStdout: true, script: 'date +%s')
-            // }
-            // if ("$ref" == 'release') {
-            //     IMAGE_VERSION = sh(returnStdout: true, script: '''(git tag | egrep rc-[0-9] || echo rc-0 ) | sort --version-sort -r | head -1 | awk -F 'rc-' '{ print "rc-" $2 +1}' ''')
-            // }
           }
         }
       }
+
       stage('Build') {
         when {
           expression {
