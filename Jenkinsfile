@@ -42,6 +42,7 @@ spec:
     GenericTrigger(
      genericVariables: [
       [key: 'ref', value: '$.ref', regexpFilter: 'refs/heads/', default: ''],
+      [key: 'commiter', value: '$.head_commit.committer.username'],
       // [key: 'base_ref', value: '$.base.ref', default: '']
      ],
 
@@ -55,8 +56,8 @@ spec:
 
      silentResponse: false,
 
-    //  regexpFilterText: '$ref',
-    //  regexpFilterExpression: 'dev'
+    regexpFilterText: '$commiter',
+    regexpFilterExpression: '^(?!.*(TarasArtiushenko))'
     )
   }
     environment {
